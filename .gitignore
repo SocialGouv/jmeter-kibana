@@ -1,0 +1,4 @@
+.jmeter.env
+apache-jmeter*
+jmeter.log
+output.csv
