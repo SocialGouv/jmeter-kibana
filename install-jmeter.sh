@@ -6,7 +6,7 @@ CMDRUNNER_VERSION=2.2
 
 # Download & unzip
 curl http://mirror.ibcp.fr/pub/apache//jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz > ./apache-jmeter-${JMETER_VERSION}.tgz
-tar -xzf $HOME/apache-jmeter-${JMETER_VERSION}.tgz 
+tar -xzf ./apache-jmeter-${JMETER_VERSION}.tgz 
 
 # Create a .env file
 echo "export JMETER_HOME=$(pwd)/apache-jmeter-${JMETER_VERSION}" > .jmeter.env
