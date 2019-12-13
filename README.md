@@ -40,7 +40,9 @@ Load you test plan and edit your scenario. The base scenario will query `/api/v1
 ## Launch a test plan
 
 ```bash
-$ sh launchJmeter 1
+$ launchJMeter.sh 1
+# or in debug mode
+$ sh -x ./launchJMeter.sh 1
 ```
 
 THe script take a buildNumber as a paramater to identify your tests run. Edit the script to set
