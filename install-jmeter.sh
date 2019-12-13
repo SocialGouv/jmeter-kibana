@@ -11,7 +11,7 @@ tar -xzf ./apache-jmeter-${JMETER_VERSION}.tgz
 # Create a .env file
 echo "export JMETER_HOME=$(pwd)/apache-jmeter-${JMETER_VERSION}" > .jmeter.env
 echo 'export PATH=$PATH:$JMETER_HOME/bin' >> .jmeter.env
-source .jmeter.env
+source ./.jmeter.env
 
 # Install jmeter plugin manager & plugins
 curl -L "https://jmeter-plugins.org/get/" > ${JMETER_HOME}/lib/ext/plugins-manager.jar
