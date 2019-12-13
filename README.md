@@ -10,7 +10,9 @@ See how to [install an apm agent](https://www.elastic.co/guide/en/apm/get-starte
 ## Jmeter setup
 
 ```bash
-$ sh install-jmeter.sh
+$ ./install-jmeter.sh
+# or in debug mode
+$ sh -x install-jmeter.sh
 ```
 
 Once download / clone the repository, you will need to install jmeter (current version `5.2.1` ).
