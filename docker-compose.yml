@@ -37,7 +37,7 @@ services:
       - elasticsearch
 
   apm:
-    image: docker.elastic.co/apm/apm-server:7.9.2
+    image: docker.elastic.co/apm/apm-server:7.9.3
     ports:
       - 8200:8200
       - 8201:8200
