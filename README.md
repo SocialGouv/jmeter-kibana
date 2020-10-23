@@ -11,10 +11,15 @@ See how to [install an apm agent](https://www.elastic.co/guide/en/apm/get-starte
 ## Elasticsearch / kibana setup
 
 ```bash
-$ docker-compose up elasticsearch kibana apm dashboard 
+$ docker-compose up elasticsearch kibana apm 
 ```
 
-This will start a locally elasticsearch / kibana / apm server to monitor you application during the load test. elasticsearch is running on port 9400. It will also install the associated dashboard
+This will start a locally elasticsearch / kibana / apm server to monitor you application during the load test. elasticsearch is running on port 9400.
+Once kibana is ready, you can install a dashboard to view jmeter test results using 
+
+```bash
+$ docker-compose run --rm dashboard
+```
 
 ## Test plan setup
 

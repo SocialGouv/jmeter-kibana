@@ -66,7 +66,7 @@ services:
     image: curlimages/curl:7.73.0
     depends_on: 
       - kibana
-    command: sh /app/wait-for.sh kibana:5601 -- curl -H 'kbn-xsrf:true' -F 'file=@/app/jmeter-dashboard.ndjson' 'http://kibana:5601/api/saved_objects/_import?overwrite=true'
+    command: curl -H 'kbn-xsrf:true' -F 'file=@/app/jmeter-dashboard.ndjson' 'http://kibana:5601/api/saved_objects/_import?overwrite=true'
 
     volumes:
       - ./jmeter-dashboard.ndjson:/app/jmeter-dashboard.ndjson
