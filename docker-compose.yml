@@ -9,9 +9,9 @@ services:
       - jmeter 
       - -n 
       - -t=./config/test-plan.jmx 
-      - -JnbThreads=3 
-      - -Jduration=30 
-      - -JrampUp=15 
+      - -JnbThreads=5 
+      - -Jduration=300 
+      - -JrampUp=150
       - -JBuildNumber=1
       - -JendPoint=/ 
       - -JhostUrl=host.docker.internal
