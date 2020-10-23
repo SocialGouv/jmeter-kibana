@@ -1,0 +1,12 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production ELASTIC_APM_ACTIVE=true ELASTIC_APM_LOG_LEVEL=debug ELASTIC_APM_SERVER_URL=http://localhost:8200 ELASTIC_APM_SERVICE_NAME=api node -r elastic-apm-node/start api.js"
+  },
+  "devDependencies": {
+    "elastic-apm-node": "^3.7.0"
+  }
+}

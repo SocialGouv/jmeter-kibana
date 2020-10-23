@@ -61,6 +61,11 @@ Make test last 1 minute (see Scheduler)</stringProp>
               <stringProp name="Argument.value">${__P(hostPort,1337)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
+            <elementProp name="endPoint" elementType="Argument">
+              <stringProp name="Argument.name">endPoint</stringProp>
+              <stringProp name="Argument.value">${__P(endPoint,/api/health)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
           </collectionProp>
         </Arguments>
         <hashTree/>
@@ -124,7 +129,7 @@ Connect to 5s</stringProp>
           <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/api/v1/search</stringProp>
+          <stringProp name="HTTPSampler.path">${endPoint}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -204,12 +209,12 @@ Connect to 5s</stringProp>
             </elementProp>
             <elementProp name="es.host" elementType="Argument">
               <stringProp name="Argument.name">es.host</stringProp>
-              <stringProp name="Argument.value">localhost</stringProp>
+              <stringProp name="Argument.value">host.docker.internal</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="es.port" elementType="Argument">
               <stringProp name="Argument.name">es.port</stringProp>
-              <stringProp name="Argument.value">9400</stringProp>
+              <stringProp name="Argument.value">9200</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="es.index" elementType="Argument">

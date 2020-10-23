@@ -1,15 +1,33 @@
 version: "3"
 
 services:
+  jmeter: 
+    build: 
+      context: .
+      dockerfile: jmeter.Dockerfile
+    command: 
+      - jmeter 
+      - -n 
+      - -t=./config/test-plan.jmx 
+      - -JnbThreads=3 
+      - -Jduration=30 
+      - -JrampUp=15 
+      - -JBuildNumber=1
+      - -JendPoint=/ 
+      - -JhostUrl=host.docker.internal
+      - -JhostPort=5000
+      - -o ./
+      - -Ljmeter=debug 
+    networks:
+      - elastic
+
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
-    ports:
-      - 9400:9200
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
     environment:
       - node.name=elasticsearch
-      - cluster.name=eka-cluster
-      - network.host=0.0.0.0
-      - "ES_JAVA_OPTS=-Xms256M -Xmx256M"
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - cluster.routing.allocation.disk.threshold_enabled=false
       - discovery.type=single-node
       - http.cors.enabled=true
       - http.cors.allow-origin=*
@@ -18,37 +36,68 @@ services:
       - xpack.ml.enabled=false
       - xpack.graph.enabled=false
       - xpack.watcher.enabled=false
+      - ES_JAVA_OPTS=-XX:UseAVX=2 -Xms1g -Xmx1g
     ulimits:
       memlock:
-        soft: -1
         hard: -1
+        soft: -1
     volumes:
-      - ekadata:/usr/share/elasticsearch/data
-    command:
-      - sh
-      - -c
-      - "./bin/elasticsearch-plugin install --silent analysis-icu; docker-entrypoint.sh"
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9400:9200
+    networks:
+      - elastic
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.9.2
-    ports:
-      - 5601:5601
+    image: docker.elastic.co/kibana/kibana:7.9.3
     depends_on:
       - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    volumes:
+      - ./jmeter-dashboard.ndjson:/usr/share/kibana/config/jmeter-dashboard.ndjson
+    ports:
+      - 5601:5601
+    networks:
+      - elastic
+
+  dashboard: 
+    image: curlimages/curl:7.73.0
+    depends_on: 
+      - kibana
+    command: sh /app/wait-for.sh kibana:5601 -- curl -H 'kbn-xsrf:true' -F 'file=@/app/jmeter-dashboard.ndjson' 'http://kibana:5601/api/saved_objects/_import?overwrite=true'
+
+    volumes:
+      - ./jmeter-dashboard.ndjson:/app/jmeter-dashboard.ndjson
+      - ./wait-for.sh:/app/wait-for.sh
+    networks:
+      - elastic
 
   apm:
-    image: docker.elastic.co/apm/apm-server:7.9.2
-    ports:
-      - 8200:8200
-      - 8201:8200
-    environment:
-      - apm-server.host=0.0.0.0
-      - setup.kibana.host=kibana:5601
-      - output.elasticsearch.hosts=["elasticsearch:9400"]
+    image: docker.elastic.co/apm/apm-server:7.9.3
     depends_on:
       - elasticsearch
       - kibana
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+      - 8200:8200
+    networks:
+      - elastic
+    command: >
+       apm-server -e
+         -E apm-server.rum.enabled=true
+         -E setup.kibana.host=kibana:5601
+         -E setup.template.settings.index.number_of_replicas=0
+         -E apm-server.kibana.enabled=true
+         -E apm-server.kibana.host=kibana:5601
+         -E output.elasticsearch.hosts=["elasticsearch:9200"]
 
 volumes:
-  ekadata:
+  esdata:
     driver: local
+
+networks:
+  elastic:
+    driver: bridge
