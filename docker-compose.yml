@@ -75,7 +75,7 @@ services:
       - elastic
 
   apm:
-    image: docker.elastic.co/apm/apm-server:7.9.3
+    image: docker.elastic.co/apm/apm-server:8.10.3
     depends_on:
       - elasticsearch
       - kibana
